@@ -77,7 +77,7 @@
         </button>
 
 <?php
-if( $row2['usertype_id']==2){
+if( $row2['user_type_id']==2){
 echo '
 
  <div class="hidden sm:block sm:ml-6">

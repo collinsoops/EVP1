@@ -27,20 +27,14 @@
 $results = $conn->prepare("SELECT * FROM election");
 	//$results->bindParam(':erid', $id);
 				$results->execute();
-	
-		
 
 		?>
 		
 		
 	<fieldset>
-	
-	
-	
-		<h2 class="fs-title font-bold text-center  ">please select election first</h2>
-		
 
-		
+		<h2 class="fs-title font-bold text-center  ">please select election first</h2>
+
 		<hr/>
 	
 		
@@ -84,7 +78,7 @@ $results = $conn->prepare("SELECT * FROM election");
             
                    
           
-					   <div class=" font-bold fs-title text-center pt-2">Name :<?php echo $row['election_title']; ?></div>
+					   <div class="font-bold fs-title text-center pt-2 bg-green-200 p-1">Name :<?php echo $row['election_title']; ?></div>
 					   <hr>
 					    <div class=" text-center text-sm"><span class="font-bold">Election Description : </span><?php echo $row['election_description']; ?></div>  <hr>
 						 <div class=" text-center text-sm"><span class="font-bold">Election Start Date :</span><?php echo $row['election_start_date']; ?></div>  <hr>
@@ -94,7 +88,7 @@ $results = $conn->prepare("SELECT * FROM election");
 							 <div class=" text-center text-sm pb-2"><span class="font-bold">Election End Time :</span><?php echo $row['election_end_time']; ?></div>
 							<hr>
 
- <div class=" text-center text-sm p-3"><input type="button" value="CHOOSE" class="next actio-button" style="background-color:#0066CC"  description="next"></div>
+ <div class=" text-center text-sm p-3"><input type="button" value="Select" class="bg-green-300 p-1"  description="next"></div>
 
 
  <hr>

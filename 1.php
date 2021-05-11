@@ -34,9 +34,6 @@ $sql = "SELECT * FROM votes WHERE voters_id = '".$voter['id']."'";
 										$cquery ->execute();
 						           $slug = $row['description']; 
 														
-												
-											
-													
 
 ?>
 

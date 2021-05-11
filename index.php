@@ -3,8 +3,6 @@ session_start();
   if(isset($_SESSION['voter'])){
       header('location: home.php');
     }
-
-
 ?>
 
 
@@ -53,9 +51,7 @@ session_start();
   			unset($_SESSION['error']);
   		}
   	?>
-
-			
-			
+	
 			</p>
         </section>
 
@@ -73,19 +69,13 @@ session_start();
                 <button class="bg-purple-600 hover:bg-purple-700 text-white font-bold py-2 rounded shadow-lg  hover:shadow-xl transition duration-200" type="submit" name="login">Log In</button>
 		
             </form>
-			
-					 
-				
+
 				        </section>
 						
     </main>
 
-
-
     <footer class="max-w-lg mx-auto flex justify-center text-white">
-     
-       
-    
+  
     </footer>
 </body>
 </html>
