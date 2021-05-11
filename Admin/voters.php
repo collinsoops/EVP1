@@ -3,20 +3,19 @@
 	require_once('sessioncheck.php');
 	//require_once('checkelection.php');
 $el=$_SESSION['id'];
-$page='Candidates';
+
+$page='voters';
 $sort_variable = "user_id";
 
 	?>
 
-
-
 <!DOCTYPE html>
-<html :class="{ 'theme-dark': dark }" x-data="data()" lang="en">
+<html :class="{'theme-dark': dark }" x-data="data()" lang="en">
 
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Candidates</title>
+    <title>Voters</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
         rel="stylesheet" />
     <link rel="stylesheet" href="./assets/css/tailwind.output.css" />
@@ -49,11 +48,12 @@ $sort_variable = "user_id";
         <main class="h-full pb-16 overflow-y-auto">
             <div class="container grid px-6 mx-auto">
                 <h4 class="my-6 text-2xl font-semibold text-gray-700 dark:text-gray-200">
-                    Candidates </h4>
+                    Voters </h4>
 
-                <a href="addcandidate.php">
-                    <h3 class="my-2 text-2xl font-semibold text-purple-700 dark:text-blue-200 bg-purple-700">
-                        Add candidate </h3>
+                <a href="addvoters.php">
+                    <input type="button" value="Add New Voter"
+                        class="bg-purple-600 w-30  hover:bg-purple-700 text-white font-bold py-1 px-3 rounded shadow-lg items-center hover:shadow-xl transition duration-200 float-right" />
+
                 </a>
 
                 <div class="w-full overflow-hidden rounded-lg shadow-xs">
@@ -63,8 +63,10 @@ $sort_variable = "user_id";
                                 <tr
                                     class="text-xs font-semibold tracking-wide text-left text-gray-500 uppercase border-b dark:border-gray-700 bg-gray-50 dark:text-gray-400 dark:bg-gray-800">
                                     <th class="px-4 py-3">Profile</th>
-                                    <th class="px-4 py-3">Details</th>
-                                    <th class="px-4 py-3">Position</th>
+                                    <th class="px-4 py-3">Username</th>
+
+                                    <th class="px-4 py-3">Type</th>
+                                    <th class="px-4 py-3">Status</th>
 
                                     <th class="px-4 py-3">Actions</th>
                                 </tr>
@@ -74,56 +76,34 @@ $sort_variable = "user_id";
                             <tbody class="bg-white divide-y dark:divide-gray-700 dark:bg-gray-800">
 
                                 <?php
-					$id=2;
+
+
+
+
+$results_per_page = 10;
 	
-  
-              $results_per_page = 10;
-                
-                
-              if (isset($_GET["page"])) 
-              { $page  = $_GET["page"]; } 
-              else { $page=1; };
-              $start_from = ($page-1) * $results_per_page;
-              
-              if((isset($_POST['sort_var']))){
-                $sort_variable = $_POST['sort_var'];	
-                //$sortType = $_POST['sort_type'];
-              }
-              
-                        
-                            $result = $conn->prepare("SELECT * FROM users WHERE (election_id= $el) AND (user_type_id= $id) ORDER BY $sort_variable  LIMIT $start_from, ".$results_per_page );
-                        //	$result->bindParam(':el', $el);
-                      
-                          //$result = $conn->prepare("SELECT * FROM users");
-                          $result->execute();
-                          for($i=0; $row = $result->fetch(); $i++){
-                       
+	
+if (isset($_GET["page"])) 
+{ $page  = $_GET["page"]; } 
+else { $page=1; };
+$start_from = ($page-1) * $results_per_page;
 
+if((isset($_POST['sort_var']))){
+	$sort_variable = $_POST['sort_var'];	
+	//$sortType = $_POST['sort_type'];
+}
 
-
-
-
-                                ?>
-
-                                <?php
-				  $user= $row['user_id']; 
-				  	$result1 = $conn->prepare("SELECT * FROM candidates WHERE user_id= :user");
-						$result1->bindParam(':user', $user);
-						$result1->execute();
-						$row1 = $result1->fetch();
-						
-						$pos=$row1['position_id'];
-						
-						 	$result2 = $conn->prepare("SELECT * FROM positions WHERE position_id= :pos");
-						$result2->bindParam(':pos', $pos);
-						$result2->execute();
-						$row2 = $result2->fetch();
-						
-						
-				  ?>
+					
+					    $result = $conn->prepare("SELECT * FROM users WHERE election_id= $el  ORDER BY $sort_variable  LIMIT $start_from, ".$results_per_page );
+					//	$result->bindParam(':el', $el);
+				
+						//$result = $conn->prepare("SELECT * FROM users");
+						$result->execute();
+						for($i=0; $row = $result->fetch(); $i++){
+					?>
 
                                 <tr class="text-gray-700 dark:text-gray-400">
-                                    <td class="px-4 py-2">
+                                    <td class="px-4 py-3">
                                         <div class="flex items-center text-sm">
                                             <!-- Avatar with inset shadow -->
                                             <div class="relative hidden w-8 h-8 mr-3 rounded-full md:block">
@@ -143,25 +123,30 @@ $sort_variable = "user_id";
                                         </div>
                                     </td>
                                     <td class="px-4 py-3 text-sm">
-                                        <?php echo $row1['bio_info']; ?>
+                                        <?php echo $row['username']; ?>
                                     </td>
-
-                                    <td class="px-4 py-3 text-sm ">
+                                    <td class="px-4 py-3 text-sm">
                                         <?php 
-					
-				
-						echo $row2['position_description']; 
-					
+					 
+					 $type= $row['user_type_id']; 
+					 
+					 $results = $conn->prepare("SELECT * FROM usertype WHERE user_type_id= :type");
+	$results->bindParam(':type', $type);
+	$results->execute();
+	$rows2 = $results->fetch();
+echo $rows2['user_type_name']; 
+					 
 					?>
 
 
-
                                     </td>
+                                    <td class="px-4 py-3 text-sm">
+                                        <?php echo $row['username']; ?>
+                                    </td>
+
                                     <td class="px-4 py-3">
                                         <div class="flex items-center space-x-4 text-sm">
-
-                                            <a rel="facebox"
-                                                href="editcandidate.php?id= <?php echo $row1['candidate_id']; ?>">
+                                            <a rel="facebox" href="editvoter.php?id= <?php echo $row['user_id']; ?>">
                                                 <button
                                                     class="flex items-center justify-between px-2 py-2 text-sm font-medium leading-5 text-purple-600 rounded-lg dark:text-gray-400 focus:outline-none focus:shadow-outline-gray"
                                                     aria-label="Edit">
@@ -172,10 +157,15 @@ $sort_variable = "user_id";
                                                         </path>
                                                     </svg>
                                                 </button>
-                                                <button id="<?php echo $row1['candidate_id']; ?>"
-                                                    title="Click To Delete" name="delbutton"
+
+                                                <button id="<?php echo $row['user_id']; ?>" title="Click To Delete"
+                                                    name="delbutton"
                                                     class="flex items-center justify-between px-2 py-2 text-sm font-medium leading-5 text-purple-600 rounded-lg dark:text-gray-400 focus:outline-none focus:shadow-outline-gray delbutton"
                                                     aria-label="Delete">
+
+
+
+
                                                     <svg class="w-5 h-5" aria-hidden="true" fill="currentColor"
                                                         viewBox="0 0 20 20">
                                                         <path fill-rule="evenodd"
@@ -193,8 +183,12 @@ $sort_variable = "user_id";
                             </tbody>
                         </table>
                     </div>
+
+
+
+
                     <?php
-$query = $conn->prepare("SELECT * FROM candidates WHERE election_id= $el ");
+$query = $conn->prepare("SELECT * FROM users WHERE election_id= $el ");
 		  //$sql = "SELECT userId AS total FROM users ";
     //  $query = $conn->prepare($sql);
 
@@ -235,7 +229,7 @@ for ($i=1; $i<=$total_pages; $i++) {  // print links for all pages
                                     <?php
 
 
-         echo " <a href='candidates.php?page=".$i."'";
+         echo " <a href='voters.php?page=".$i."'";
 
             if ($i==$page)  echo " class='curPage'";
 
@@ -256,12 +250,6 @@ for ($i=1; $i<=$total_pages; $i++) {  // print links for all pages
 
                                     }
                                     ?>
-
-
-
-
-
-
 
                                     <li>
                                         <button
@@ -285,6 +273,9 @@ for ($i=1; $i<=$total_pages; $i++) {  // print links for all pages
     </div>
 </body>
 
+</html>
+
+
 <script src="js/jquery.js"></script>
 <script type="text/javascript">
 $(function() {
@@ -300,11 +291,11 @@ $(function() {
 
         //Built a url to send
         var info = 'id=' + del_id;
-        if (confirm("Sure you want to delete this candidate? There is NO undo!")) {
+        if (confirm("Sure you want to delete this voter? There is NO undo!")) {
 
             $.ajax({
                 type: "GET",
-                url: "deletecandidates.php",
+                url: "deletevoter.php",
                 data: info,
                 success: function() {
 

@@ -2,13 +2,12 @@
 //session_start();
 	require_once('sessioncheck.php');
 	//require_once('checkelection.php');
-$el=$_SESSION['id'];
-$page='Candidates';
-$sort_variable = "user_id";
 
+  $el=$_SESSION['id'];
+  $page='Candidates';
+  $sort_variable = "position_id";
+  
 	?>
-
-
 
 <!DOCTYPE html>
 <html :class="{ 'theme-dark': dark }" x-data="data()" lang="en">
@@ -16,27 +15,25 @@ $sort_variable = "user_id";
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Candidates</title>
+    <title>Positions</title>
+
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
         rel="stylesheet" />
     <link rel="stylesheet" href="./assets/css/tailwind.output.css" />
     <script src="https://cdn.jsdelivr.net/gh/alpinejs/alpine@v2.x.x/dist/alpine.min.js" defer></script>
     <script src="./assets/js/init-alpine.js"></script>
-
+    <link href="src/facebox.css" media="screen" rel="stylesheet" type="text/css" />
+    <script src="js/jquery.js" type="text/javascript"></script>
     <script src="src/facebox.js" type="text/javascript"></script>
     <script src="js/jquery.js"></script>
     <script type="text/javascript">
-    < script type = "text/javascript" >
-        jQuery(document).ready(function($) {
-            $('a[rel*=facebox]').facebox({
-                loadingImage: 'src/loading.gif',
-                closeImage: 'src/closelabel.png'
-            })
+    jQuery(document).ready(function($) {
+        $('a[rel*=facebox]').facebox({
+            loadingImage: 'src/loading.gif',
+            closeImage: 'src/closelabel.png'
         })
+    })
     </script>
-
-
-
 </head>
 
 <body>
@@ -46,27 +43,36 @@ $sort_variable = "user_id";
         <?php include 'aside.php'; ?>
 
 
+
+
+
         <main class="h-full pb-16 overflow-y-auto">
             <div class="container grid px-6 mx-auto">
                 <h4 class="my-6 text-2xl font-semibold text-gray-700 dark:text-gray-200">
-                    Candidates </h4>
+                    Positions
 
-                <a href="addcandidate.php">
-                    <h3 class="my-2 text-2xl font-semibold text-purple-700 dark:text-blue-200 bg-purple-700">
-                        Add candidate </h3>
-                </a>
+                </h4>
+
+
+                <h4 class="my-2 text-2xl  text-purple-700 font-bold ">
+                    <a href="addposition.php"> Add
+                    </a>
+                </h4>
+
+
+
 
                 <div class="w-full overflow-hidden rounded-lg shadow-xs">
+
                     <div class="w-full overflow-x-auto">
+
                         <table class="w-full whitespace-no-wrap">
                             <thead>
                                 <tr
                                     class="text-xs font-semibold tracking-wide text-left text-gray-500 uppercase border-b dark:border-gray-700 bg-gray-50 dark:text-gray-400 dark:bg-gray-800">
-                                    <th class="px-4 py-3">Profile</th>
-                                    <th class="px-4 py-3">Details</th>
-                                    <th class="px-4 py-3">Position</th>
-
-                                    <th class="px-4 py-3">Actions</th>
+                                    <th class="px-4 py-3">Id</th>
+                                    <th class="px-4 py-3">Description</th>
+                                    <th class="px-4 py-3">Action</th>
                                 </tr>
                             </thead>
 
@@ -74,95 +80,42 @@ $sort_variable = "user_id";
                             <tbody class="bg-white divide-y dark:divide-gray-700 dark:bg-gray-800">
 
                                 <?php
-					$id=2;
+
+
+
+$results_per_page = 4;
 	
-  
-              $results_per_page = 10;
-                
-                
-              if (isset($_GET["page"])) 
-              { $page  = $_GET["page"]; } 
-              else { $page=1; };
-              $start_from = ($page-1) * $results_per_page;
-              
-              if((isset($_POST['sort_var']))){
-                $sort_variable = $_POST['sort_var'];	
-                //$sortType = $_POST['sort_type'];
-              }
-              
-                        
-                            $result = $conn->prepare("SELECT * FROM users WHERE (election_id= $el) AND (user_type_id= $id) ORDER BY $sort_variable  LIMIT $start_from, ".$results_per_page );
-                        //	$result->bindParam(':el', $el);
-                      
-                          //$result = $conn->prepare("SELECT * FROM users");
-                          $result->execute();
-                          for($i=0; $row = $result->fetch(); $i++){
-                       
+	
+if (isset($_GET["page"])) 
+{ $page  = $_GET["page"]; } 
+else { $page=1; };
+$start_from = ($page-1) * $results_per_page;
 
+if((isset($_POST['sort_var']))){
+	$sort_variable = $_POST['sort_var'];	
+	//$sortType = $_POST['sort_type'];
+}
 
+	
 
-
-
-                                ?>
-
-                                <?php
-				  $user= $row['user_id']; 
-				  	$result1 = $conn->prepare("SELECT * FROM candidates WHERE user_id= :user");
-						$result1->bindParam(':user', $user);
-						$result1->execute();
-						$row1 = $result1->fetch();
-						
-						$pos=$row1['position_id'];
-						
-						 	$result2 = $conn->prepare("SELECT * FROM positions WHERE position_id= :pos");
-						$result2->bindParam(':pos', $pos);
-						$result2->execute();
-						$row2 = $result2->fetch();
-						
-						
-				  ?>
-
-                                <tr class="text-gray-700 dark:text-gray-400">
-                                    <td class="px-4 py-2">
-                                        <div class="flex items-center text-sm">
-                                            <!-- Avatar with inset shadow -->
-                                            <div class="relative hidden w-8 h-8 mr-3 rounded-full md:block">
-                                                <img class="object-cover w-full h-full rounded-full"
-                                                    src="../img/candidate/<?php echo $row['photo']; ?>" alt=""
-                                                    loading="lazy" />
-                                                <div class="absolute inset-0 rounded-full shadow-inner"
-                                                    aria-hidden="true"></div>
-                                            </div>
-                                            <div>
-                                                <p class="font-semibold"><?php echo $row['firstname']; ?>
-                                                    <?php echo $row['lastname']; ?></p>
-                                                <p class="text-xs text-gray-600 dark:text-gray-400">
-                                                    <?php echo $row['username']; ?>
-                                                </p>
-                                            </div>
-                                        </div>
-                                    </td>
-                                    <td class="px-4 py-3 text-sm">
-                                        <?php echo $row1['bio_info']; ?>
-                                    </td>
-
-                                    <td class="px-4 py-3 text-sm ">
-                                        <?php 
-					
-				
-						echo $row2['position_description']; 
-					
+						$result = $conn->prepare("SELECT * FROM positions WHERE election_id= '".$_SESSION['id']."'    ORDER BY $sort_variable  LIMIT $start_from, ".$results_per_page    );
+						$result->execute();
+						for($i=0; $row = $result->fetch(); $i++){
 					?>
 
-
-
+                                <tr class="text-gray-700 dark:text-gray-400">
+                                    <td class="px-4 py-3 text-sm">
+                                        <?php echo $row['position_id']; ?>
                                     </td>
+                                    <td class="px-4 py-3 text-sm">
+                                        <?php echo $row['position_description']; ?>
+                                    </td>
+
+
                                     <td class="px-4 py-3">
                                         <div class="flex items-center space-x-4 text-sm">
-
                                             <a rel="facebox"
-                                                href="editcandidate.php?id= <?php echo $row1['candidate_id']; ?>">
-                                                <button
+                                                href="editposition.php?id=<?php echo $row['position_id']; ?>"> <button
                                                     class="flex items-center justify-between px-2 py-2 text-sm font-medium leading-5 text-purple-600 rounded-lg dark:text-gray-400 focus:outline-none focus:shadow-outline-gray"
                                                     aria-label="Edit">
                                                     <svg class="w-5 h-5" aria-hidden="true" fill="currentColor"
@@ -172,19 +125,39 @@ $sort_variable = "user_id";
                                                         </path>
                                                     </svg>
                                                 </button>
-                                                <button id="<?php echo $row1['candidate_id']; ?>"
-                                                    title="Click To Delete" name="delbutton"
-                                                    class="flex items-center justify-between px-2 py-2 text-sm font-medium leading-5 text-purple-600 rounded-lg dark:text-gray-400 focus:outline-none focus:shadow-outline-gray delbutton"
-                                                    aria-label="Delete">
-                                                    <svg class="w-5 h-5" aria-hidden="true" fill="currentColor"
-                                                        viewBox="0 0 20 20">
-                                                        <path fill-rule="evenodd"
-                                                            d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z"
-                                                            clip-rule="evenodd"></path>
-                                                    </svg>
-                                                </button>
+                                            </a>
+
+
+
+                                            <button id="<?php echo $row['position_id']; ?>" title="Click To Delete"
+                                                name="delbutton"
+                                                class="flex items-center justify-between px-2 py-2 text-sm font-medium leading-5 text-purple-600 rounded-lg dark:text-gray-400 focus:outline-none focus:shadow-outline-gray delbutton"
+                                                aria-label="Delete">
+                                                <svg class="w-5 h-5" aria-hidden="true" fill="currentColor"
+                                                    viewBox="0 0 20 20">
+                                                    <path fill-rule="evenodd"
+                                                        d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z"
+                                                        clip-rule="evenodd"></path>
+                                                </svg>
+                                            </button>
+
+
+
                                         </div>
                                     </td>
+
+
+
+
+
+
+
+
+
+
+
+
+
                                 </tr>
 
                                 <?php
@@ -235,7 +208,7 @@ for ($i=1; $i<=$total_pages; $i++) {  // print links for all pages
                                     <?php
 
 
-         echo " <a href='candidates.php?page=".$i."'";
+         echo " <a href='positions.php?page=".$i."'";
 
             if ($i==$page)  echo " class='curPage'";
 
@@ -285,6 +258,7 @@ for ($i=1; $i<=$total_pages; $i++) {  // print links for all pages
     </div>
 </body>
 
+</html>
 <script src="js/jquery.js"></script>
 <script type="text/javascript">
 $(function() {
@@ -300,11 +274,11 @@ $(function() {
 
         //Built a url to send
         var info = 'id=' + del_id;
-        if (confirm("Sure you want to delete this candidate? There is NO undo!")) {
+        if (confirm("Sure you want to delete this update? There is NO undo!")) {
 
             $.ajax({
                 type: "GET",
-                url: "deletecandidates.php",
+                url: "deleteposition.php",
                 data: info,
                 success: function() {
 

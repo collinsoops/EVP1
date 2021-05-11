@@ -15,7 +15,7 @@
 	
 	
 	$sql1 = "UPDATE users
-        SET usertype_id=?
+        SET user_type_id=?
 		WHERE user_id=?";
 $q1 = $conn->prepare($sql1);
 $q1->execute(array($u,$id1));

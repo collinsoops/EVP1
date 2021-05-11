@@ -15,7 +15,7 @@ $u=2;
 
 
 $sql1 = "UPDATE users
-        SET usertype_id=?
+        SET user_type_id=?
 		WHERE user_id=?";
 $q1 = $conn->prepare($sql1);
 $q1->execute(array($u,$id));
@@ -98,7 +98,7 @@ header("location: candidates.php");
 						
 							$u=3;
 	
-							$result1 = $conn->prepare("SELECT * FROM users WHERE (usertype_id = :user) AND (election_id=:el ) ");
+							$result1 = $conn->prepare("SELECT * FROM users WHERE (user_type_id = :user) AND (election_id=:el ) ");
 						//$result1->bindParam(':user', $u);
 						
 							$result1->execute(array(':user'=>$u, ':el'=>$el));
